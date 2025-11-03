@@ -1,31 +1,11 @@
 #!groovy
 pipeline {
-    agent none
+    agent any
     stages {
-        stage('Maven Install') {
-            agent {
-                docker {
-                    image 'maven:3.9-eclipse-temurin-25'
-                    reuseNode true
-                }
-            }
+        stage('Hello') {
             steps {
-                sh 'mvn clean install'
-            }
-        }
-        stage('Docker Build') {
-            agent any
-            steps {
-                sh 'docker build -t isabellacb17/spring-petclinic:latest .'
-            }
-        }
-        stage('Docker Push') {
-            agent any
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-                    sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
-                    sh 'docker push isabellacb17/spring-petclinic:latest'
-                }
+                echo 'Hello World!'
+                sh 'docker --version'
             }
         }
     }
